@@ -1,0 +1,133 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Sign in · Wedding Platform</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@500;600;700&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="theme.css">
+</head>
+<body>
+<div class="auth-wrap">
+  <div class="auth-card fade-in">
+    <div class="auth-logo">
+      <div class="mark">Forever <span class="amp">&amp;</span> Co.</div>
+      <div class="tag">Wedding Weekends</div>
+    </div>
+
+    <h1 class="auth-title" id="title">Welcome back</h1>
+    <p class="auth-sub" id="subtitle">Sign in to manage your wedding</p>
+
+    <div class="auth-error" id="error"></div>
+    <div id="noteSlot"></div>
+
+    <div class="field">
+      <label for="email">Email</label>
+      <input class="input" type="email" id="email" autocomplete="email" placeholder="you@email.com">
+    </div>
+    <div class="field">
+      <label for="password">Password</label>
+      <input class="input" type="password" id="password" autocomplete="current-password" placeholder="••••••••">
+    </div>
+
+    <button class="btn btn-primary btn-block btn-lg" id="submitBtn">Sign in</button>
+
+    <p class="auth-switch" id="switchLine">
+      New here? <a id="switchLink">Create an account</a>
+    </p>
+  </div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script src="config.js"></script>
+<script>
+(function(){
+  "use strict";
+  let mode = "signin"; // or "signup"
+  const $ = id => document.getElementById(id);
+  const err = $("error");
+  function showErr(msg){ err.textContent = msg; err.classList.add("show"); }
+  function clearErr(){ err.classList.remove("show"); }
+
+  function setMode(m){
+    mode = m;
+    if(m === "signup"){
+      $("title").textContent = "Create your account";
+      $("subtitle").textContent = "Start building your wedding weekend";
+      $("submitBtn").textContent = "Create account";
+      $("password").setAttribute("autocomplete","new-password");
+      $("switchLine").innerHTML = 'Already have an account? <a id="switchLink">Sign in</a>';
+    } else {
+      $("title").textContent = "Welcome back";
+      $("subtitle").textContent = "Sign in to manage your wedding";
+      $("submitBtn").textContent = "Sign in";
+      $("password").setAttribute("autocomplete","current-password");
+      $("switchLine").innerHTML = 'New here? <a id="switchLink">Create an account</a>';
+    }
+    clearErr();
+    bindSwitch();
+  }
+  function bindSwitch(){
+    $("switchLink").onclick = ()=> setMode(mode === "signin" ? "signup" : "signin");
+  }
+  bindSwitch();
+
+  // ---- route a logged-in user to the right place ----
+  async function routeByRole(){
+    const { data:{ user } } = await sb.auth.getUser();
+    if(!user) return;
+    // fetch profile (admin?) and whether they own a wedding
+    const { data: profile } = await sb.from("profiles").select("is_admin").eq("id", user.id).single();
+    if(profile && profile.is_admin){
+      window.location.href = "admin.html";
+      return;
+    }
+    window.location.href = "dashboard.html";
+  }
+
+  // if already logged in, skip the form
+  sb.auth.getSession().then(({ data:{ session } })=>{
+    if(session) routeByRole();
+  });
+
+  async function submit(){
+    clearErr();
+    const email = $("email").value.trim();
+    const password = $("password").value;
+    if(!email || !password){ showErr("Enter your email and password."); return; }
+    const btn = $("submitBtn");
+    const orig = btn.textContent;
+    btn.disabled = true; btn.innerHTML = '<span class="spinner"></span>';
+
+    try{
+      if(mode === "signup"){
+        const { error } = await sb.auth.signUp({ email, password });
+        if(error){ throw error; }
+        // some projects require email confirmation; handle both cases
+        const { data:{ session } } = await sb.auth.getSession();
+        if(!session){
+          $("noteSlot").innerHTML = '<div class="auth-note">Account created! Check your email to confirm, then sign in.</div>';
+          setMode("signin");
+          btn.disabled = false; btn.textContent = "Sign in";
+          return;
+        }
+        await routeByRole();
+      } else {
+        const { error } = await sb.auth.signInWithPassword({ email, password });
+        if(error){ throw error; }
+        await routeByRole();
+      }
+    }catch(e){
+      showErr(e.message || "Something went wrong. Try again.");
+      btn.disabled = false; btn.textContent = orig;
+    }
+  }
+
+  $("submitBtn").onclick = submit;
+  $("password").addEventListener("keydown", e=>{ if(e.key==="Enter") submit(); });
+  $("email").addEventListener("keydown", e=>{ if(e.key==="Enter") $("password").focus(); });
+})();
+</script>
+</body>
+</html>

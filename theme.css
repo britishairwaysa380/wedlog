@@ -1,0 +1,105 @@
+/* ============================================================
+   Wedding Platform — Shared Theme (sleek & modern)
+   Lilac / deep lilac / navy / white
+   ============================================================ */
+:root{
+  --lilac:#8B7DD8; --lilac-deep:#5E51A8; --lilac-soft:#EDEAF9; --lilac-mist:#F6F4FC;
+  --navy:#2A3257; --navy-soft:#3A4470;
+  --ink:#1E2138; --muted:#7A7E96; --line:#E7E5F0; --line-soft:#F0EEF7;
+  --bg:#FBFAFD; --card:#FFFFFF; --gold:#C9A84C;
+  --teal:#2F8F83; --teal-soft:#E2F2EF; --danger:#C0506B;
+  --radius:18px; --radius-sm:12px; --radius-pill:999px;
+  --shadow-sm:0 1px 3px rgba(42,50,87,.06), 0 1px 2px rgba(42,50,87,.04);
+  --shadow:0 4px 16px rgba(42,50,87,.08), 0 1px 4px rgba(42,50,87,.04);
+  --shadow-lg:0 12px 40px rgba(42,50,87,.14), 0 4px 12px rgba(42,50,87,.06);
+  --serif:'Cormorant Garamond',Georgia,'Times New Roman',serif;
+  --sans:-apple-system,BlinkMacSystemFont,'Inter','Segoe UI',Roboto,Helvetica,Arial,sans-serif;
+  --ease:cubic-bezier(.4,0,.2,1);
+}
+*{box-sizing:border-box;-webkit-tap-highlight-color:transparent;}
+html,body{margin:0;padding:0;}
+body{
+  font-family:var(--sans); background:var(--bg); color:var(--ink);
+  line-height:1.55; -webkit-font-smoothing:antialiased; text-rendering:optimizeLegibility;
+}
+a{color:var(--lilac-deep);}
+
+/* ---------- Typographic helpers ---------- */
+.serif{font-family:var(--serif);}
+.display{font-family:var(--serif); font-weight:600; letter-spacing:.3px; line-height:1.1;}
+.eyebrow{font-size:11px; font-weight:700; letter-spacing:1.6px; text-transform:uppercase; color:var(--lilac-deep);}
+.muted{color:var(--muted);}
+
+/* ---------- Buttons ---------- */
+.btn{
+  display:inline-flex; align-items:center; justify-content:center; gap:8px;
+  font-family:var(--sans); font-size:15px; font-weight:600; cursor:pointer;
+  border:none; border-radius:var(--radius-pill); padding:13px 22px;
+  transition:transform .12s var(--ease), box-shadow .2s var(--ease), background .2s var(--ease);
+  text-decoration:none;
+}
+.btn:active{transform:translateY(1px) scale(.99);}
+.btn-primary{background:var(--lilac); color:#fff; box-shadow:0 4px 14px rgba(139,125,216,.35);}
+.btn-primary:hover{background:var(--lilac-deep); box-shadow:0 6px 20px rgba(94,81,168,.4);}
+.btn-ghost{background:var(--lilac-soft); color:var(--lilac-deep);}
+.btn-ghost:hover{background:#E3DDF6;}
+.btn-outline{background:transparent; color:var(--lilac-deep); border:1.5px solid var(--lilac);}
+.btn-outline:hover{background:var(--lilac-soft);}
+.btn-block{width:100%;}
+.btn-lg{padding:15px 26px; font-size:16px;}
+.btn:disabled{opacity:.55; cursor:not-allowed; transform:none;}
+
+/* ---------- Inputs ---------- */
+.field{margin-bottom:16px;}
+.field label{display:block; font-size:12.5px; font-weight:600; color:var(--navy); margin-bottom:6px; letter-spacing:.2px;}
+.input, .select, .textarea{
+  width:100%; font-family:var(--sans); font-size:15px; color:var(--ink);
+  background:#fff; border:1.5px solid var(--line); border-radius:var(--radius-sm);
+  padding:12px 14px; outline:none; transition:border-color .15s var(--ease), box-shadow .15s var(--ease);
+}
+.input:focus, .select:focus, .textarea:focus{border-color:var(--lilac); box-shadow:0 0 0 3px rgba(139,125,216,.15);}
+.textarea{resize:vertical; min-height:72px;}
+
+/* ---------- Cards ---------- */
+.card{background:var(--card); border:1px solid var(--line); border-radius:var(--radius); box-shadow:var(--shadow-sm);}
+.card-pad{padding:22px;}
+
+/* ---------- Auth layout ---------- */
+.auth-wrap{min-height:100vh; display:flex; align-items:center; justify-content:center; padding:24px;
+  background:radial-gradient(1200px 600px at 50% -10%, var(--lilac-mist) 0%, var(--bg) 55%);}
+.auth-card{width:100%; max-width:420px; background:var(--card); border-radius:var(--radius);
+  box-shadow:var(--shadow-lg); padding:36px 30px; border:1px solid var(--line-soft);}
+.auth-logo{text-align:center; margin-bottom:26px;}
+.auth-logo .mark{font-family:var(--serif); font-weight:600; font-size:30px; color:var(--navy); letter-spacing:.5px;}
+.auth-logo .mark .amp{color:var(--lilac); font-style:italic;}
+.auth-logo .tag{font-size:12px; letter-spacing:1.4px; text-transform:uppercase; color:var(--muted); margin-top:4px;}
+.auth-title{font-family:var(--serif); font-size:24px; font-weight:600; color:var(--navy); margin:0 0 4px; text-align:center;}
+.auth-sub{font-size:13.5px; color:var(--muted); text-align:center; margin:0 0 24px;}
+.auth-switch{text-align:center; font-size:13.5px; color:var(--muted); margin-top:18px;}
+.auth-switch a{font-weight:600; cursor:pointer; text-decoration:none;}
+.auth-error{background:#FCEEF1; color:var(--danger); font-size:13px; border-radius:10px; padding:10px 13px; margin-bottom:16px; display:none;}
+.auth-error.show{display:block;}
+.auth-note{background:var(--lilac-soft); color:var(--lilac-deep); font-size:13px; border-radius:10px; padding:12px 14px; margin-bottom:16px; line-height:1.5;}
+
+/* ---------- App shell (admin/dashboard) ---------- */
+.topbar{position:sticky; top:0; z-index:40; background:rgba(255,255,255,.85); backdrop-filter:saturate(180%) blur(12px);
+  border-bottom:1px solid var(--line); display:flex; align-items:center; justify-content:space-between; padding:14px 22px;}
+.topbar .brand{font-family:var(--serif); font-size:20px; font-weight:600; color:var(--navy);}
+.topbar .brand .amp{color:var(--lilac); font-style:italic;}
+.container{max-width:1040px; margin:0 auto; padding:26px 20px 80px;}
+.page-title{font-family:var(--serif); font-size:30px; font-weight:600; color:var(--navy); margin:0 0 4px;}
+.page-sub{font-size:14px; color:var(--muted); margin:0 0 26px;}
+
+/* ---------- Spinner ---------- */
+.spinner{width:22px; height:22px; border:2.5px solid rgba(255,255,255,.45); border-top-color:#fff; border-radius:50%; animation:spin .7s linear infinite; display:inline-block;}
+.spinner.dark{border-color:rgba(139,125,216,.25); border-top-color:var(--lilac);}
+@keyframes spin{to{transform:rotate(360deg);}}
+.center-load{min-height:100vh; display:flex; align-items:center; justify-content:center;}
+
+/* ---------- Misc ---------- */
+.pill{display:inline-block; font-size:10.5px; font-weight:700; letter-spacing:.5px; text-transform:uppercase;
+  padding:3px 10px; border-radius:var(--radius-pill);}
+.pill-pending{background:#FCF3E0; color:#9C7A1E;}
+.pill-active{background:var(--teal-soft); color:var(--teal);}
+.fade-in{animation:fade .3s var(--ease);}
+@keyframes fade{from{opacity:0; transform:translateY(6px);}to{opacity:1; transform:none;}}

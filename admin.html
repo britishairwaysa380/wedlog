@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Admin · Wedding Platform</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@500;600;700&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="theme.css">
+</head>
+<body>
+<div class="center-load" id="loader"><span class="spinner dark"></span></div>
+
+<div id="app" style="display:none;">
+  <div class="topbar">
+    <div class="brand">Forever <span class="amp">&amp;</span> Co. <span style="font-family:var(--sans);font-size:12px;font-weight:600;color:var(--lilac-deep);background:var(--lilac-soft);padding:3px 9px;border-radius:999px;margin-left:6px;">ADMIN</span></div>
+    <button class="btn btn-ghost" id="logout">Sign out</button>
+  </div>
+  <div class="container">
+    <h1 class="page-title">Admin</h1>
+    <p class="page-sub" id="welcome"></p>
+    <div class="card card-pad">
+      <p class="muted" style="margin:0;">The admin dashboard (all weddings, activate/deactivate, open any wedding) gets built in the next step. Auth + routing are working — you're here because your account is flagged <b>admin</b>. ✅</p>
+    </div>
+  </div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script src="config.js"></script>
+<script src="auth-guard.js"></script>
+<script>
+(async function(){
+  const ctx = await requireAuth({ admin:true });
+  if(!ctx) return;
+  document.getElementById("welcome").textContent = "Signed in as " + ctx.email;
+  document.getElementById("logout").onclick = signOut;
+  document.getElementById("loader").style.display = "none";
+  document.getElementById("app").style.display = "block";
+})();
+</script>
+</body>
+</html>

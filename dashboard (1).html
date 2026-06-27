@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Dashboard · Wedding Platform</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@500;600;700&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="theme.css">
+</head>
+<body>
+<div class="center-load" id="loader"><span class="spinner dark"></span></div>
+
+<div id="app" style="display:none;">
+  <div class="topbar">
+    <div class="brand">Forever <span class="amp">&amp;</span> Co.</div>
+    <button class="btn btn-ghost" id="logout">Sign out</button>
+  </div>
+  <div class="container" id="content"></div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script src="config.js"></script>
+<script src="auth-guard.js"></script>
+<script>
+(async function(){
+  const ctx = await requireAuth();
+  if(!ctx) return;
+  document.getElementById("logout").onclick = signOut;
+
+  // Does this user own a wedding yet, and is it active?
+  const { data: weddings } = await sb.from("weddings").select("*").eq("owner", ctx.user.id).limit(1);
+  const wedding = weddings && weddings[0];
+  const content = document.getElementById("content");
+
+  if(!wedding){
+    // No wedding yet — they're a fresh signup awaiting activation
+    content.innerHTML = `
+      <h1 class="page-title">You're almost in</h1>
+      <p class="page-sub">Your account is created. To activate your wedding workspace, reach out to get set up.</p>
+      <div class="card card-pad">
+        <p style="margin:0 0 6px;"><b>Next step:</b> Contact us to activate your account.</p>
+        <p class="muted" style="margin:0;">Once activated, you'll land here in the setup wizard to build your wedding weekend — info, locations, people, and events.</p>
+      </div>`;
+  } else if(wedding.status !== "active"){
+    content.innerHTML = `
+      <h1 class="page-title">Pending activation</h1>
+      <p class="page-sub">Your wedding is set up but not active yet.</p>
+      <div class="card card-pad">
+        <p class="muted" style="margin:0;">We'll flip this on once you're all set. Check back soon!</p>
+      </div>`;
+  } else {
+    content.innerHTML = `
+      <h1 class="page-title">Your wedding</h1>
+      <p class="page-sub">${wedding.couple_names || "Setup in progress"}</p>
+      <div class="card card-pad">
+        <p class="muted" style="margin:0;">The setup wizard + editor gets built in the next step. Auth + routing are working. ✅</p>
+      </div>`;
+  }
+
+  document.getElementById("loader").style.display = "none";
+  document.getElementById("app").style.display = "block";
+})();
+</script>
+</body>
+</html>
